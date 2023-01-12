@@ -7,7 +7,7 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
   schedule:
-    - cron: '30 22 * * *'
+    - cron: '30 * * * *'
       # cron表达式，Actions时区是UTC时间，所以上午9点要往前推8个小时
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
