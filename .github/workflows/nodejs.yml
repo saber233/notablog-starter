@@ -1,19 +1,35 @@
-name: Node.js Reference Test
-
+name: Github Pages
 on:
   push:
+    branches: main
+  pull_request:
+      branches: main
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  schedule:
+    - cron: '30 22 * * *'
+      # cron表达式，Actions时区是UTC时间，所以上午9点要往前推8个小时
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
+  # This workflow contains a single job called "build"
   build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      # 拉取代码
+      - name: Checkout
+        uses: actions/checkout@v2
+      # 1、生成静态文件
+      - name: Build
+        run: npm i -g notablog && notablog generate .
+      # 2、部署到 GitHub Pages
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4.2.5
         with:
-          node-version: "16"
-      - name: Generate the test blog
-        run: |
-          npm i -g notablog
-          notablog generate .
-        env:
-          CI: true
+          token: ${{ secrets.ACCESS_TOKEN }}
+          repository-name: saber233/gyxz.github.io # 修改这里
+          BRANCH: main  # 如果你的仓库默认分支是 master 记得修改这里
+          FOLDER: public
